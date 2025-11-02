@@ -69,21 +69,38 @@ D --> G[Modo Deep Sleep / Hibernação]
 ---
 
 ## 🔌 Circuitos
+### Visão geral da conexão entre ESP32-C3, HX711, células de carga e alimentação.
 
-Adicione seus esquemas elétricos ou diagrama de ligação neste diretório para facilitar a reprodução do hardware:
+![Circuito_principal](images/circuito_principal.png)
 
-- `images/circuito_principal.png` – visão geral da conexão entre ESP32-C3, HX711, células de carga e alimentação.
-- `images/circuito_touch.png` – ligação do sensor capacitivo no GPIO 2 e referência ao modo deep sleep.
-- `images/circuito_divisor_bateria.png` – divisor resistivo para monitoramento da tensão da bateria.
+---
 
-```text
-images/
-├── circuito_principal.png
-├── circuito_touch.png
-└── circuito_divisor_bateria.png
-```
+## 🖼️ Imagens do Protótipo
+### Partes mecânicas
+#### Célula de carga
 
-> Se preferir, exporte também versões em PDF/SVG a partir do seu software de CAD/Fritzing.
+![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga01.png)
+![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga02.png)
+
+![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga03.png)
+![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga04.png)
+
+#### Caixa de circuitos
+![Acessorios_Celula_de_Carga](images/caixa01.png)
+![Acessorios_Celula_de_Carga](images/caixa02.png)
+
+![Acessorios_Celula_de_Carga](images/caixa03.png)
+![Acessorios_Celula_de_Carga](images/caixa04.png)
+
+![Acessorios_Celula_de_Carga](images/caixa05.png)
+
+
+### Partes eletrônica
+#### Teste em protoboard.
+![Protoboard](images/protoboard.png)
+
+#### Circuito para teste final.
+![Protoboard](images/placa_perfurada.png)
 
 ---
 
@@ -173,13 +190,7 @@ images/
 
 ---
 
-## 🖼️ Imagens do Protótipo
 
-| Protótipo físico | Diagrama elétrico |
-| ---------------- | ----------------- |
-| _adicione uma foto em_ `images/prototipo.jpg` | _adicione o diagrama em_ `images/diagrama_circuito.png` |
-
----
 
 ## 📊 Exemplo de Planilha Google
 
