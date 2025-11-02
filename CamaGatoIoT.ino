@@ -12,22 +12,22 @@
 #define debug  //descomente esta linha para debugar o código
 
 // *******  WIFI  *******
-const char* ssid = yourSSID ;  //substitua yourSSID por seu wifi entre aspas, exemplo:  "MINHACASA"
-const char* pass =  yourPASS;  //substitua yourPASS por sua senha entre aspas, exemplo  "SU@53h@" 
+//const char* ssid = yourSSID ;  //substitua yourSSID por seu wifi entre aspas, exemplo:  "MINHACASA"
+//const char* pass =  yourPASS;  //substitua yourPASS por sua senha entre aspas, exemplo  "SU@53h@"
 
 // *******  Google sheet  *******
-const char* scriptURL = yourScriptURL; // Substitua yourScriptURL pelo endereço de app  criado no google sheet
+//const char* scriptURL = yourScriptURL; // Substitua yourScriptURL pelo endereço de app  criado no google sheet
 void connectWiFi(void);
 void enviaParaGoogle(float peso, float temperatura, float bateria);
 
 // *******  Automato  *******
-int automato = 0;         
+int automato = 0;
 int automatoDebug = 0;
 unsigned long contaPiscadaAnterior = 0;  // will store last time LED was updated
 const long intervaloPiscada = 250;       // intervaloPiscada at which to blink (milliseconds)
 unsigned long hiberna5min = 0;
 const long interval5min = 5 * 60 * 1000;  // 5 minuto * segundo * milesegundos  total= 5 minuto.
-int interval24h = 24 * 6;  // 24horas * 6 * (10)min, pois usa o numero de hibernações, a cada 10min para contar o tempo.
+int interval24h = 24 * 6;                 // 24horas * 6 * (10)min, pois usa o numero de hibernações, a cada 10min para contar o tempo.
 //int interval24h = 6;  // 24horas * 6 * (10)min, pois usa o numero de hibernações, a cada 10min para contar o tempo.
 bool status_LED = false;
 int contaPiscada = 0;
@@ -43,8 +43,8 @@ void goToSleep(void);
 #define HX711_DT 3   // terminal de dados
 #define HX711_SCK 4  // terminal de clock
 HX711 scale;
-#define pesoMinimo 300            // g
-#define pesoAlteracaoMinima 100   // 100g
+#define pesoMinimo 300                   // g
+#define pesoAlteracaoMinima 100          // 100g
 RTC_DATA_ATTR float pesoAnterior = 0.0;  // RTC_DATA_ATTR -> não se perde na hibernação
 RTC_DATA_ATTR uint32_t contadorSleep = 0;
 
@@ -67,9 +67,9 @@ float valorBateria(void);
 // *******  BLYNK  *******
 //#define BLYNK_DEBUG
 #define BLYNK_PRINT Serial
-#define BLYNK_TEMPLATE_ID YOUR_BLYNK_TEMPLATE_ID
-#define BLYNK_TEMPLATE_NAME YOUR_BLYNK_TEMPLATE_NAME
-#define BLYNK_AUTH_TOKEN YOUR_BLYNK_TEMPLATE_NAME
+//#define BLYNK_TEMPLATE_ID YOUR_BLYNK_TEMPLATE_ID
+//#define BLYNK_TEMPLATE_NAME YOUR_BLYNK_TEMPLATE_NAME
+//#define BLYNK_AUTH_TOKEN YOUR_BLYNK_TEMPLATE_NAME
 #include <BlynkMultiClient.h>
 static WiFiClient blynkWiFiClient;
 unsigned long startBlynkEnvio;
@@ -87,25 +87,30 @@ BLYNK_WRITE(V1);
 #endif
 
 void setup() {
-  pinMode(2, INPUT_PULLDOWN);
-  pinMode(TOUCH_WAKE_PIN, INPUT_PULLUP);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
-  wakeup_cause = esp_sleep_get_wakeup_cause();
-
   Serial.begin(115200);
   delay(500);
+  pinMode(TOUCH_WAKE_PIN, INPUT_PULLDOWN);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
+
+  do {
+    delay(100);
+    scale.begin(HX711_DT, HX711_SCK);    //
+    MySPrintln("inicializando setup  HX711");
+    delay(500);
+  } while (!scale.is_ready());
+  MySPrintln("HX711 Iniciado com sucesso");
+  wakeup_cause = esp_sleep_get_wakeup_cause();
 
   //Que atitude tomar de acordo de como acordou
   switch (wakeup_cause) {
     case ESP_SLEEP_WAKEUP_TIMER:  // Acordou por estouro de timer
-
       MySPrintln("Acordou por estouro de timer");
       massaAtual = valorMassa();
       if (massaAtual < pesoMinimo) {  // Se balança vazia.
         MySPrintln("Balanca vazia");
         delay(100);
-        goToSleep();    // volta a hibernar
+        goToSleep();  // volta a hibernar
         break;
       };
 
@@ -117,19 +122,19 @@ void setup() {
         MySPrintln("Sem alteração de massa significativa, não enviar");
         if (contadorSleep > interval24h) {
           MySPrintln("Estouro de 24 horas");
-          pesoAnterior = 0;  //permite reentrada apos 24h
-          contadorSleep = 0; // reinicia contagem de 24h +/-
+          pesoAnterior = 0;   //permite reentrada apos 24h
+          contadorSleep = 0;  // reinicia contagem de 24h +/-
         }
         delay(100);
         goToSleep();
         break;
       };
 
-      bateriaAtual = valorBateria();   // obtem tensão da bateria
+      bateriaAtual = valorBateria();  // obtem tensão da bateria
       MySPrintln("Conectando Wifi");
-      connectWiFi();                    // conecta wifi  
+      connectWiFi();  // conecta wifi
       MySPrintln("Enviando para a GOOGLE");
-      enviaParaGoogle(massaAtual / 1000, 0, bateriaAtual); // envia para o google 
+      enviaParaGoogle(massaAtual / 1000, 0, bateriaAtual);  // envia para o google
       MySPrintln("Conectando BLYNK");
       Blynk.addClient("WiFi", blynkWiFiClient, 80);
       Blynk.config(BLYNK_AUTH_TOKEN);
@@ -190,7 +195,7 @@ void loop() {
   }
 
   //Timer para hiberna depois de 5 minutos sem interação com usuário
-  if ((wakeup_cause == ESP_SLEEP_WAKEUP_GPIO) && (currentMillis - hiberna5min >= interval5min)) { 
+  if ((wakeup_cause == ESP_SLEEP_WAKEUP_GPIO) && (currentMillis - hiberna5min >= interval5min)) {
     MySPrintln("Hiberna 5 min");
     delay(100);
     goToSleep();
@@ -207,11 +212,11 @@ void loop() {
       break;
 
     case 2:
-    //terminar aqui
+      //terminar aqui
       //apenas aguarda conecção
       //sai desta parte do automato atravez da função BLYNK_CONNECTED
       if (WiFi.status() != WL_CONNECTED) connectWiFi();
-      
+
       Blynk.run();
       break;
 
@@ -244,11 +249,19 @@ void enviaParaGoogle(float peso, float temperatura, float bateria) {
 
 
 float valorMassa(void) {
-  do {
-    scale.begin(HX711_DT, HX711_SCK);
-    MySPrintln("inicializando  HX711");
+  /*do {
+    scale.power_down();
     delay(100);
-  } while (!scale.is_ready());
+    scale.reset();
+    delay(100);
+    //scale.power_up();
+    delay(100);
+    //digitalWrite(HX711_SCK, LOW);  /
+    scale.begin(HX711_DT, HX711_SCK);
+    //
+    MySPrintln("inicializando  HX711");
+    delay(200);
+  } while (!scale.is_ready()); */
 
   MySPrintln("Calibrando...");
   prefs.begin("config", false);
@@ -261,11 +274,11 @@ float valorMassa(void) {
     MySPrint("offsetPref: ");
     MySPrintln(offsetPref);
     if (scalaPref < 0) {
-      prefs.putFloat("scalaPref_", 173.870163);  // Se não tem, grava valor definido em tempo de produção
+      prefs.putFloat("scalaPref_", 173.870163);  // Se não tem, grava valor calibrado em tempo de desenvolvimento
       MySPrintln("Ajustando escala pela primeira vez");
     }
     if (offsetPref < 0) {
-      prefs.putFloat("offsetPref_", 172004);  // Se não tem, grava valor definido em tempo de produção
+      prefs.putFloat("offsetPref_", 172004);  // Se não tem, grava valor calibrado em tempo de desenvolvimento
       MySPrintln("Ajustando offset pela primeira vez");
     }
   } while (scalaPref < 0 || offsetPref < 0);
@@ -273,7 +286,7 @@ float valorMassa(void) {
   scale.set_scale(scalaPref);
   scale.set_offset(offsetPref);  //calibrando
   MySPrintln("Pesando...");
-  scale.power_up();
+  //scale.power_up();
   delay(100);
   float leitura = scale.get_units(10);  // média de 10 leituras
   MySPrint("Peso: ");
@@ -317,8 +330,8 @@ void goToSleep(void) {
   MySPrint("Entrando em deep sleep n");
   MySPrintln(contadorSleep);
   MySPrintln("\n");
-  digitalWrite(HX711_SCK, HIGH);  // Coloca HX711 em Power Down
-  digitalWrite(LED_BUILTIN, LOW);
+  scale.power_down();
+  digitalWrite(LED_BUILTIN, HIGH);
   delay(10);
   esp_deep_sleep_start();
 }
@@ -326,9 +339,11 @@ void goToSleep(void) {
 
 BLYNK_CONNECTED() {
   MySPrintln("blink conectado");
+
   digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
   contaPiscada = 5;
   hiberna5min = millis();
+  Blynk.virtualWrite(V5, 1);
   automato = 3;
 }
 
@@ -337,7 +352,7 @@ BLYNK_WRITE(V0) {  //PESA
   int value = param.asInt();
   MySPrint("V0 acionado: ");
   MySPrintln(value);
-  MySPrintln("Enviando dados para BLYNK");//RTC_DATA_ATTR float taraVolatil = 0;
+  MySPrintln("Enviando dados para BLYNK");  //RTC_DATA_ATTR float taraVolatil = 0;
   bateriaAtual = valorBateria();
   massaAtual = valorMassa();
   if (massaAtual > pesoMinimo) {
@@ -375,4 +390,18 @@ BLYNK_WRITE(V1) {  // TARA A BALANÇA
   Blynk.virtualWrite(V1, 0);
   hiberna5min = millis();
   contaPiscada = 2;
+}
+
+BLYNK_WRITE(V5) {
+  int value = param.asInt();
+  MySPrintln(value);
+  startBlynkEnvio = millis();
+  if (value == 0) {
+    Blynk.virtualWrite(V5, 0);
+    while (millis() - startBlynkEnvio < 1000) {  // aguarda ~1 segundo
+      Blynk.run();
+      delay(10);
+    }
+    goToSleep();
+  }
 }
