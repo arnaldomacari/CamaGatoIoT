@@ -128,6 +128,8 @@ D --> G[Modo Deep Sleep / Hibernação]
 - Conta Google com acesso ao Apps Script e Google Sheets.
 - Conta Blynk (Free Tier compatível).
 
+![Protoboard](images/biblioteca01.png)
+![Protoboard](images/biblioteca02.png)
 ---
 
 ## 🚀 Como Começar
@@ -154,9 +156,12 @@ D --> G[Modo Deep Sleep / Hibernação]
      - `V0` botão momentâneo (Pesagem manual).
      - `V1` botão momentâneo (Tara).
      - `V4` display numérico (Tensão da bateria).
+     - `V5` botão momentâneo (Desligar circuito eletrônico).
      - `V8` display numérico (Peso atual em kg).
      - `V9` gráfico ou histórico (Últimos envios em kg).
    - Copie `Template ID`, `Template Name` e `Auth Token` para `senhas.h`.
+
+![Protoboard](images/appBlynk.jpeg)
 
 4. **Publicar o Google Apps Script**
    - Crie uma planilha e um Apps Script para receber POST com JSON (`peso`, `temperatura`, `bateria`).
@@ -196,6 +201,8 @@ D --> G[Modo Deep Sleep / Hibernação]
 
 - Campos sugeridos: `timestamp`, `peso_kg`, `variacao_kg`, `bateria_v`, `origem` (timer ou manual).
 - Inclua gráficos de tendência e alertas automáticos para quedas/acréscimos acentuados.
+
+![Protoboard](images/grafico.png)
 
 ---
 
