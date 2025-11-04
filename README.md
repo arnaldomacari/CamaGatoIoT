@@ -37,9 +37,16 @@ As medições são transmitidas automaticamente para:
 
 ---
 
+## 📝 Justificativa
+
+Alterações discretas no peso corporal são, muitas vezes, os primeiros sinais de enfermidades em felinos e tendem a passar despercebidas em rotinas domésticas convencionais. Ao unir sensores de baixo custo, computação embarcada eficiente e integração com plataformas de visualização de dados, o projeto possibilita acompanhamento longitudinal, embasando decisões veterinárias mais rápidas e assertivas. A solução também serve como prova de conceito para tutorizar práticas de bem-estar animal apoiadas por IoT, incentivando a comunidade a adaptar e expandir o sistema conforme necessidades específicas.
+
+---
+
 ## ⚙️ Arquitetura do Sistema
 
 ```mermaid
+%%{init: {"theme": "default", "themeVariables": {"fontSize": "12px"}, "config": {"zoom": false, "pan": false}}}%%
 graph LR
 A[Gato sobre a cama] --> B[Base com células de carga]
 B --> C[HX711 - Amplificador de Sinais]
