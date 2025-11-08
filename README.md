@@ -69,7 +69,7 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 
 ---
 
-## 🔌 Circuitos
+## ⚡ Circuitos
 ### Visão geral da conexão entre ESP32-C3, HX711, células de carga e alimentação.
 
 ![Circuito_principal](images/circuito_principal.png)
@@ -100,8 +100,20 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 #### Teste em protoboard.
 ![Protoboard](images/protoboard.png)
 
+
 #### Circuito para teste final.
-![Protoboard](images/placa_perfurada.png)
+![Placa](images/prototipo_final.png)
+
+
+#### Base pequena para teste de bancada.
+![Protoboard](images/base_por_cima.png)
+![Protoboard](images/base_por_baixo.png)
+
+
+#### Finalizando
+![Protoboard](images/caixa06.png)
+![Protoboard](images/caixa07.png)
+
 
 ---
 
@@ -129,19 +141,23 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 - Conta Google com acesso ao Apps Script e Google Sheets.
 - Conta Blynk (Free Tier compatível).
 
+
+### Bibliotecas instaladas na Arduino IDE
 ![Protoboard](images/biblioteca01.png)
 ![Protoboard](images/biblioteca02.png)
 ---
 
 ## 🚀 Como Começar
 
-1. **Clonar o repositório**
+1. **Monte o prototipo seguindo as imagens acima**
+
+2. **Clonar o repositório**
    ```bash
    git clone https://github.com/arnaldomacari/CamaGatoIoT.git
    cd CamaGatoIoT
    ```
 
-2. **Criar `senhas.h`** (não versionado) na raiz do projeto:
+3. **Criar `senhas.h`** (não versionado) na raiz do projeto:
    ```cpp
    #define yourSSID "NOME_DA_REDE"
    #define yourPASS "SENHA_DA_REDE"
@@ -152,7 +168,63 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
    #define YOUR_BLYNK_AUTH_TOKEN "token_do_dispositivo"
    ```
 
-3. **Configurar o Blynk**
+---
+
+4. **Selecionar a placa e compilar**
+   - Na IDE, escolha a placa; para este projeto optou-se pela **NoLogo ESP32-C3 Super Mini** 
+   - Ajuste a porta serial e compile.
+   - Faça upload e monitore a serial a 115200 bps (ativando `#define debug` para logs detalhados).
+
+![Protoboard](images/NoLogo_ESP32-C3_super_mini.png)
+
+
+5. **Calibração e Operação**
+
+A própria biblioteca do **RobTillaart** para HX711 fornece um exemplo para calibrar sua balança. 
+
+![Calibracao](images/calibracao.png)
+
+- Abra o exemplo,  
+- ajuste as linhas **13 e 14** como mostrado abaixo 
+```cpp
+  - uint8_t dataPin = 3;  
+  - uint8_t clockPin = 4;
+```
+- Grave a sketch no esp32. 
+- Com o auxilio de um **peso conhecido**, sigas as intruções mostradas no Monito Serial da IDE arduino.  
+  - Se o monitor serial não estiver aparecendo, use **Ctrl + Shift + M** para abrir o monitor.
+  - Se estiver usando um ESP com conexão direta com a USB, como o **ESP32-c3 Super Mini** coloque um **delay** apos iniciar a porta serial
+
+```cpp
+void setup()
+{
+  Serial.begin(115200);
+  delay(1000);  //  espera Serial Monito se conectar na USB Serial 
+```
+
+- Ao final, será mostrado os **valores de calibração** similar a :
+
+```cpp
+WEIGHT: 3000
+SCALE:  135.926117
+
+use **scale.set_offset(253466)**; and **scale.set_scale(135.926117)**;
+in the setup of your project 
+```
+
+- Substitua os valores no código **CamaGatoIoT.ino** como mostrado abaixo:
+
+```cpp
+// Calibração em tempo de projeto
+#define scalaPrefIni 135.926117
+#define offsetPrefIni 253466
+```
+Na primeira vez que usar ou toda vez que mudar algo sobre a base, como uma cama nova, tare a balança usando o app blynk
+
+---
+
+
+6. **Configurar o Blynk**
    - Crie um template com widgets:
      - `V0` botão momentâneo (Pesagem manual).
      - `V1` botão momentâneo (Tara).
@@ -164,14 +236,9 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 
 ![Protoboard](images/appBlynk.jpeg)
 
-4. **Publicar o Google Apps Script**
-   - Crie uma planilha e um Apps Script para receber POST com JSON (`peso`, `temperatura`, `bateria`).
-   - Publique como aplicação web acessível a qualquer pessoa com o link.
-   - Cole a URL gerada em `yourScriptURL`.
-  
+7. **Publicar o Google Apps Script**
+   - Crie uma planilha e um Apps Script para receber POST com JSON (`peso`, `temperatura`, `bateria`). 
 
-
-#### 📜 Código Google Apps Script (Integração com Google Sheets)  
 
 ```javascript
 function doPost(e) {
@@ -199,25 +266,39 @@ function doPost(e) {
 ```
 
 
-5. **Selecionar a placa e compilar**
-   - Na IDE, escolha a placa; para este projeto optou-se pela NoLogo ESP32-C3 Super Mini 
-   - Ajuste a porta serial e compile.
-   - Faça upload e monitore a serial a 115200 bps (ativando `#define debug` para logs detalhados).
+   - Publique como aplicação web acessível a qualquer pessoa com o link.
+   - Cole a URL gerada em `yourScriptURL` em  **senhas.h**.
+  
 
-![Protoboard](images/NoLogo_ESP32-C3_super_mini.png)
 
----
+## 🔋 Ajuste da Curva da Tensão da Bateria
 
-## ⚖️ Calibração e Operação
+O monitoramento da bateria utiliza o ADC do ESP32-C3 lendo um divisor resistivo. Para que a tensão exibida no Blynk e no Google Sheets corresponda ao valor real, foi feito um ajuste de curva:
 
-- Ajuste `scalaPref_` e `offsetPref_` com o peso de referência antes do primeiro uso; valores são persistidos em `Preferences`.
-- Use `V1` (Tara) sempre que reposicionar a cama.
-- Para leituras consistentes:
-  - garanta alimentação estável e neutro mecânico das células de carga;
-  - afaste interferências eletromagnéticas (cabos longos, motores, etc.).
-- O LED onboard sinaliza estados de conexão (piscadas controladas pelo firmware).
+| Blynk (V) | Multímetro (V) | Equação Ajustada (V) | Erro (V) |
+| --------: | -------------: | -------------------: | -------: |
+| 4,42      | 4,14           | 4,15                 | -0,02    |
+| 4,30      | 3,94           | 3,96                 | -0,02    |
+| 3,94      | 3,52           | 3,53                 | -0,01    |
+| 3,19      | 2,95           | 2,94                 | 0,01     |
+| 3,04      | 2,81           | 2,80                 | 0,01     |
 
----
+![Calibracao](images/calibracao_bateria.png)
+
+```cpp
+float valorBateria(void) {
+  analogReadResolution(12);  // 12 bits (0-4095)
+  int leitura = analogRead(PINO_BATERIA);
+  float tensao_adc = (leitura / 4095.0) * 3.3;  // AD de 12bits para 3.3V
+  float x = tensao_adc * ((R1 + R2) / R2);      // Compensa o divisor de tensão
+  float tensao_bateria = -19.2 + 17.6*x + -4.78*x*x + 0.451*x*x*x;  // Corrige valores lidos usando 
+                                                                    // uma curva cúbica e tendo como  
+                                                                    // referência as leituras de 
+                                                                    // um multímetro
+```                                                                    
+
+Esse procedimento garante que alertas de bateria baixa e gráficos históricos representem fielmente a autonomia do sistema.
+
 
 ## 💾 Estrutura do Repositório
 
@@ -232,8 +313,7 @@ function doPost(e) {
 
 ## 📊 Exemplo de Planilha Google
 
-- Campos sugeridos: `timestamp`, `peso_kg`, `variacao_kg`, `bateria_v`, `origem` (timer ou manual).
-- Inclua gráficos de tendência e alertas automáticos para quedas/acréscimos acentuados.
+- Campos sugeridos: `timestamp`, `peso_kg`, `bateria_v`, a temperatura será usada em uma expansão futura.
 
 ![Protoboard](images/grafico.png)
 
@@ -241,10 +321,7 @@ function doPost(e) {
 
 ## 🧪 Testes e Métricas Atuais
 
-- Precisão média de ±5 g após calibração com pesos padrão.
-- Consumo em deep sleep < 20 µA.
-- Envio estável para Google Sheets (Apps Script) e atualização do painel Blynk.
-- Próximos testes: medir autonomia com bateria LiPo e validar leitura de temperatura (DS18B20).
+**Ainda em execução**
 
 ---
 

@@ -5,18 +5,18 @@
 #include <HTTPClient.h>
 #include <Preferences.h>
 #include <senhas.h> /*este arquivo não sobe para o github, 
-                      trata-se de senhas pessoais. siga os 
-                      comentários abaixo para colocar suas 
-                      senhas como se pede*/
+                      trata-se de senhas pessoais. 
+                      Siga as instruções no Readme do repositório
+                      https://github.com/arnaldomacari/CamaGatoIoT  */
+
 
 #define debug  //descomente esta linha para debugar o código
 
-// *******  WIFI  *******
-//const char* ssid = yourSSID ;  //substitua yourSSID por seu wifi entre aspas, exemplo:  "MINHACASA"
-//const char* pass =  yourPASS;  //substitua yourPASS por sua senha entre aspas, exemplo  "SU@53h@"
+// Calibração em tempo de projeto
+#define scalaPrefIni 173.870163
+#define offsetPrefIni 172004
 
-// *******  Google sheet  *******
-//const char* scriptURL = yourScriptURL; // Substitua yourScriptURL pelo endereço de app  criado no google sheet
+
 void connectWiFi(void);
 void enviaParaGoogle(float peso, float temperatura, float bateria);
 
@@ -270,11 +270,11 @@ float valorMassa(void) {
     MySPrint("offsetPref: ");
     MySPrintln(offsetPref);
     if (scalaPref < 0) {
-      prefs.putFloat("scalaPref_", 173.870163);  // Se não tem, grava valor calibrado em tempo de desenvolvimento
+      prefs.putFloat("scalaPref_", scalaPrefIni );  //Se não tem, grava valor calibrado em tempo de desenvolvimento
       MySPrintln("Ajustando escala pela primeira vez");
     }
     if (offsetPref < 0) {
-      prefs.putFloat("offsetPref_", 172004);  // Se não tem, grava valor calibrado em tempo de desenvolvimento
+      prefs.putFloat("offsetPref_", offsetPrefIni );  //Se não tem, grava valor calibrado em tempo de desenvolvimento
       MySPrintln("Ajustando offset pela primeira vez");
     }
   } while (scalaPref < 0 || offsetPref < 0);
@@ -285,7 +285,8 @@ float valorMassa(void) {
   //scale.power_up();
   delay(100);
   float leitura = scale.get_units(10);  // média de 10 leituras
-  MySPrint("Peso: ");
+  
+  MySPrint("Peso: ");                                                                      
   MySPrint(leitura);
   MySPrintln("g");
   return leitura;
@@ -295,8 +296,12 @@ float valorMassa(void) {
 float valorBateria(void) {
   analogReadResolution(12);  // 12 bits (0-4095)
   int leitura = analogRead(PINO_BATERIA);
-  float tensao_adc = (leitura / 4095.0) * 3.3;  // tensão no pino
-  float tensao_bateria = tensao_adc * ((R1 + R2) / R2);
+  float tensao_adc = (leitura / 4095.0) * 3.3;  // AD de 12bits para 3.3V
+  float x = tensao_adc * ((R1 + R2) / R2);      // Compensa o divisor de tensão
+  float tensao_bateria = -19.2 + 17.6*x + -4.78*x*x + 0.451*x*x*x;  // Corrige valores lidos usando 
+                                                                    // uma curva cúbica e tendo como  
+                                                                    // referência as leituras de 
+                                                                    // um multímetro
   MySPrint("ADC: ");
   MySPrint(leitura);
   MySPrint("  |  Tensão da bateria: ");
