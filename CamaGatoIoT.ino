@@ -34,8 +34,8 @@ int contaPiscada = 0;
 
 // ****** Hibernação  *****
 const gpio_num_t TOUCH_WAKE_PIN = GPIO_NUM_2;  // ligar ao módulo touch
-//const uint64_t SLEEP_TIME_US = 10ULL * 60 * 1000000ULL;  // minuto * segundo * microssengundos  total= 10 minutos
-const uint64_t SLEEP_TIME_US = 1ULL * 10 * 1000000ULL;  // minuto * segundo * microssengundos  total= 10 segundos
+const uint64_t SLEEP_TIME_US = 10ULL * 60 * 1000000ULL;  // minuto * segundo * microssengundos  total= 10 minutos
+//const uint64_t SLEEP_TIME_US = 1ULL * 10 * 1000000ULL;  //  total= 10 segundos para testes
 esp_sleep_wakeup_cause_t wakeup_cause;
 void goToSleep(void);
 
@@ -65,11 +65,7 @@ float valorBateria(void);
 
 
 // *******  BLYNK  *******
-//#define BLYNK_DEBUG
 #define BLYNK_PRINT Serial
-//#define BLYNK_TEMPLATE_ID YOUR_BLYNK_TEMPLATE_ID
-//#define BLYNK_TEMPLATE_NAME YOUR_BLYNK_TEMPLATE_NAME
-//#define BLYNK_AUTH_TOKEN YOUR_BLYNK_TEMPLATE_NAME
 #include <BlynkMultiClient.h>
 static WiFiClient blynkWiFiClient;
 unsigned long startBlynkEnvio;

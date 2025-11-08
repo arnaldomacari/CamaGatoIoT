@@ -2,7 +2,7 @@
 
 <p align="center">
   <span style="font-size:18px; color:blue; font-style:italic;">
-    <b>Monitoramento automático de peso e comportamento de felinos com ESP32-C3, HX711 e integração com Google Sheets e Blynk.</b>
+    <b>Monitoramento automático de peso e comportamento de felinos com ESP32-C3 Super Mini, HX711 e integração com Google Sheets e Blynk.</b>
   </span>
 </p>
 
@@ -39,24 +39,19 @@ As medições são transmitidas automaticamente para:
 
 ## 📝 Justificativa
 
-Alterações discretas no peso corporal são, muitas vezes, os primeiros sinais de enfermidades em felinos e tendem a passar despercebidas em rotinas domésticas convencionais. Ao unir sensores de baixo custo, computação embarcada eficiente e integração com plataformas de visualização de dados, o projeto possibilita acompanhamento longitudinal, embasando decisões veterinárias mais rápidas e assertivas. A solução também serve como prova de conceito para tutorizar práticas de bem-estar animal apoiadas por IoT, incentivando a comunidade a adaptar e expandir o sistema conforme necessidades específicas.
+De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publicado no  Correio Braziliense, estima-se que os lares brasileiros já abrigam mais de 30 milhões de gatos. Já a ABINPET (2025) aponta um crescimento previsto de cerca de 3,5% para o setor pet em 2025, com um faturamento que pode chegar a R$ 78 bilhões. Apesar desse cenário de expansão, estudo com 19 milhões de gatos nos Estados Unidos mostraram que 52% deles tiveram a saúde acompanhada apenas uma vez durante a vida, sendo o peso corporal um dos indicadores mais simples e importantes (CAMPIGOTTO et al., 2019), o mesmo estudo também elaborou uma curva de peso em função da idade, que pode servir de base em consultas veterinárias. O controle do peso corporal também tem relação direta com a longevidade dos pets. Segundo Pennell et al. (2019), em labradores com mais de dez anos de idade, um desvio de apenas 1 kg no peso aumentava em 19% a probabilidade de morte do animal. E finalizando, segundo matéria da University of Guelph (2019), pequenas variações no peso corporal de gatos podem indicar problemas de saúde subjacentes, reforçando a importância do monitoramento contínuo do peso ao longo da vida do animal, recomendando a aquisição de balanças. Alterações discretas no peso corporal são, muitas vezes, os primeiros sinais de enfermidades em felinos e tendem a passar despercebidas em rotinas domésticas convencionais. Ao unir sensores de baixo custo, computação embarcada eficiente e integração com plataformas de visualização de dados, o projeto possibilita acompanhamento longitudinal, embasando decisões veterinárias mais rápidas e assertivas. A solução também serve como prova de conceito para tutorizar práticas de bem-estar animal apoiadas por IoT, incentivando a comunidade a adaptar e expandir o sistema conforme necessidades específicas.
 
 ---
 
 ## ⚙️ Arquitetura do Sistema
 
-```mermaid
-%%{init: {"theme": "default", "themeVariables": {"fontSize": "12px"}, "config": {"zoom": false, "pan": false}}}%%
-graph LR
-A[Gato sobre a cama] --> B[Base com células de carga]
-B --> C[HX711 - Amplificador de Sinais]
-C --> D[ESP32-C3 - Microcontrolador WiFi]
-D --> E[Google Sheets API]
-D --> F[Blynk IoT App]
-D --> G[Modo Deep Sleep / Hibernação]
-```
+![Circuito_principal](images/mermaid.png)
 
 ---
+
+## 🧰 Escolha de Materiais
+
+
 
 ## 🧩 Componentes Utilizados
 
@@ -70,8 +65,7 @@ D --> G[Modo Deep Sleep / Hibernação]
 | **Fonte/Bateria 5V ou LiPo** | Alimentação                    | Requer estabilidade para leituras precisas |
 | **Google Apps Script**       | Integração com planilha        | Recebe POST JSON do ESP32-C3             |
 | **Blynk App (Free Tier)**    | Interface do usuário           | Widgets V0, V1, V4, V8 e V9 configurados |
-
-> Opcional: incluir um sensor DS18B20 para temperatura ambiente (suporte futuro no firmware).
+| **Placa perfurada 7cm x 3cm**| Aletrnativa a placa CI         | Suporte aos modulos no 1° teste          |
 
 ---
 
@@ -174,11 +168,43 @@ D --> G[Modo Deep Sleep / Hibernação]
    - Crie uma planilha e um Apps Script para receber POST com JSON (`peso`, `temperatura`, `bateria`).
    - Publique como aplicação web acessível a qualquer pessoa com o link.
    - Cole a URL gerada em `yourScriptURL`.
+  
+
+
+#### 📜 Código Google Apps Script (Integração com Google Sheets)  
+
+```javascript
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Página1");
+  var data = JSON.parse(e.postData.contents);
+
+  sheet.appendRow([
+    new Date(),
+    data.peso,
+    data.temperatura, //reservado para futuros testes
+    data.bateria
+  ]);
+
+  // --- Atualiza sempre a célula fixa com o último valor ---
+  // --- Utilizado para mostrar o último valor no gráfico de medidor e no geral
+  sheet.getRange("G1").setValue(new Date());
+  sheet.getRange("H1").setValue(data.peso);
+  sheet.getRange("I1").setValue(data.temperatura); //reservado para futuros testes
+  sheet.getRange("J1").setValue(data.bateria);
+
+  return ContentService
+           .createTextOutput("OK")
+           .setMimeType(ContentService.MimeType.TEXT);
+}
+```
+
 
 5. **Selecionar a placa e compilar**
-   - Na IDE, escolha a placa `ESP32C3 Dev Module` (ou sua variante).
+   - Na IDE, escolha a placa; para este projeto optou-se pela NoLogo ESP32-C3 Super Mini 
    - Ajuste a porta serial e compile.
    - Faça upload e monitore a serial a 115200 bps (ativando `#define debug` para logs detalhados).
+
+![Protoboard](images/NoLogo_ESP32-C3_super_mini.png)
 
 ---
 
@@ -224,10 +250,16 @@ D --> G[Modo Deep Sleep / Hibernação]
 
 ## 📚 Referências
 
-- Penell et al. (2019). *Body weight changes as early indicators of feline health problems*. JAVMA, 255(2), 205–214.
-- Instituto Pet Brasil (2024). *Censo de gatos no Brasil: 30,8 milhões de gatos domésticos*.
-- Espressif Systems (2023). *ESP32-C3 Datasheet*.
-- Avia Semiconductor. *HX711 Load Cell Amplifier Datasheet*.
+- ABINPET. **Setor pet projeta crescer apenas 3,5% em 2025, com faturamento de R$ 78 bilhões.** 2025. Disponível em: https://www.gov.br/agricultura/pt-br/assuntos/camaras-setoriais-tematicas/documentos/camaras-setoriais/animais-e-estimacao/2025/43a-ro-15-07-2025/release-projecao1tri25-setor-pet.pdf.  Acesso em: 26 out. 2025.
+
+- CAMPIGOTTO, Adam J. et al. Investigation of relationships between body weight and age among domestic cats stratified by breed and sex. **Journal Of The American Veterinary Medical Association**, [S.L.], v. 255, n. 2, p. 205-212, 15 jul. 2019. American Veterinary Medical Association (AVMA). http://dx.doi.org/10.2460/javma.255.2.205.  Disponível em: https://avmajournals.avma.org/view/journals/javma/255/2/javma.255.2.205.xml. Acesso em: 03 nov. 2025.. Acesso em: 03 nov. 2025.
+
+- LUCCA,B. **Adoção de gatos aumenta no Brasil e 30 milhões de felinos têm um lar.** 2025. Correio Braziliense. Disponível em: Adoção de gatos aumenta no Brasil e 30 milhões de felinos têm um lar. Acesso em: 26 out. 2025.
+
+- PENELL, Johanna Christina; MORGAN, David Mark; WATSON, Penny; CARMICHAEL, Stuart; ADAMS, Vicki Jean. Body weight at 10 years of age and change in body composition between 8 and 10 years of age were related to survival in a longitudinal study of 39 Labrador retriever dogs. **Acta Veterinaria Scandinavica**, [S.L.], v. 61, n. 1, p. 42-48, 9 set. 2019. Springer Science and Business Media LLC. http://dx.doi.org/10.1186/s13028-019-0477-x . Disponível em: https://actavetscand.biomedcentral.com/articles/10.1186/s13028-019-0477-x . Acesso em: 26 out. 2025.
+
+- **UNIVERSITY OF GUELPH**. U of G researchers first to track how cats’ weight changes over time. Guelph: University of Guelph News, 24 jul. 2019. Disponível em: https://news.uoguelph.ca/2019/07/u-of-g-researchers-first-to-track-how-cats-weight-changes-over-time/. Acesso em: 3 nov. 2025.
+
 
 ---
 
