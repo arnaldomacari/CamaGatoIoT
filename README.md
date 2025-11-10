@@ -12,7 +12,7 @@
   <a href="https://github.com/arnaldomacari/CamaGatoIoT/stargazers"><img src="https://img.shields.io/github/stars/arnaldomacari/CamaGatoIoT?style=for-the-badge" alt="Stars"></a>
   <a href="https://github.com/arnaldomacari/CamaGatoIoT/issues"><img src="https://img.shields.io/github/issues/arnaldomacari/CamaGatoIoT?style=for-the-badge" alt="Issues"></a>
   <a href="https://github.com/arnaldomacari/CamaGatoIoT"><img src="https://img.shields.io/github/last-commit/arnaldomacari/CamaGatoIoT?style=for-the-badge" alt="Last Commit"></a>
-  <img src="https://img.shields.io/badge/ESP32--C3-Firmware-blue?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Microcontroller-ESP32--C3-blue?style=for-the-badge">
   <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge">
   <a href="LICENSE"><img src="https://img.shields.io/badge/Licença-MIT-green?style=for-the-badge"></a>
 </p>
@@ -39,7 +39,9 @@ As medições são transmitidas automaticamente para:
 
 ## 📝 Justificativa
 
-De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publicado no  Correio Braziliense, estima-se que os lares brasileiros já abrigam mais de 30 milhões de gatos. Já a ABINPET (2025) aponta um crescimento previsto de cerca de 3,5% para o setor pet em 2025, com um faturamento que pode chegar a R$ 78 bilhões. Apesar desse cenário de expansão, estudo com 19 milhões de gatos nos Estados Unidos mostraram que 52% deles tiveram a saúde acompanhada apenas uma vez durante a vida, sendo o peso corporal um dos indicadores mais simples e importantes (CAMPIGOTTO et al., 2019), o mesmo estudo também elaborou uma curva de peso em função da idade, que pode servir de base em consultas veterinárias. O controle do peso corporal também tem relação direta com a longevidade dos pets. Segundo Pennell et al. (2019), em labradores com mais de dez anos de idade, um desvio de apenas 1 kg no peso aumentava em 19% a probabilidade de morte do animal. E finalizando, segundo matéria da University of Guelph (2019), pequenas variações no peso corporal de gatos podem indicar problemas de saúde subjacentes, reforçando a importância do monitoramento contínuo do peso ao longo da vida do animal, recomendando a aquisição de balanças. Alterações discretas no peso corporal são, muitas vezes, os primeiros sinais de enfermidades em felinos e tendem a passar despercebidas em rotinas domésticas convencionais. Ao unir sensores de baixo custo, computação embarcada eficiente e integração com plataformas de visualização de dados, o projeto possibilita acompanhamento longitudinal, embasando decisões veterinárias mais rápidas e assertivas. A solução também serve como prova de conceito para tutorizar práticas de bem-estar animal apoiadas por IoT, incentivando a comunidade a adaptar e expandir o sistema conforme necessidades específicas.
+De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publicado no Correio Braziliense, estima-se que os lares brasileiros já abrigam mais de 30 milhões de gatos. Já a ABINPET (2025) aponta um crescimento previsto de cerca de 3,5% para o setor pet em 2025, com um faturamento que pode chegar a R$ 78 bilhões. Apesar desse cenário de expansão, estudo com 19 milhões de gatos nos Estados Unidos mostrou que 52% deles tiveram a saúde acompanhada apenas uma vez durante a vida, sendo o peso corporal um dos indicadores mais simples e importantes (CAMPIGOTTO et al., 2019), o mesmo estudo também elaborou uma curva de peso em função da idade, que pode servir de base em consultas veterinárias. O controle do peso corporal também tem relação direta com a longevidade dos pets. Segundo Pennell et al. (2019), em labradores com mais de dez anos de idade, um desvio de apenas 1 kg no peso aumentava em 19% a probabilidade de morte do animal. Por fim, segundo matéria da University of Guelph (2019), pequenas variações no peso corporal de gatos podem indicar problemas de saúde subjacentes, reforçando a importância do monitoramento contínuo do peso ao longo da vida do animal, recomendando a aquisição de balanças. 
+
+Alterações discretas no peso corporal são, muitas vezes, os primeiros sinais de enfermidades em felinos e tendem a passar despercebidas em rotinas domésticas convencionais. Ao unir sensores de baixo custo, computação embarcada eficiente e integração com plataformas de visualização de dados, o projeto possibilita acompanhamento longitudinal, embasando decisões veterinárias mais rápidas e assertivas. A solução também serve como prova de conceito para tutorizar práticas de bem-estar animal apoiadas por IoT, incentivando a comunidade a adaptar e expandir o sistema conforme necessidades específicas.
 
 ---
 
@@ -65,7 +67,7 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 | **Fonte/Bateria 5V ou LiPo** | Alimentação                    | Requer estabilidade para leituras precisas |
 | **Google Apps Script**       | Integração com planilha        | Recebe POST JSON do ESP32-C3             |
 | **Blynk App (Free Tier)**    | Interface do usuário           | Widgets V0, V1, V4, V8 e V9 configurados |
-| **Placa perfurada 7cm x 3cm**| Aletrnativa a placa CI         | Suporte aos modulos no 1° teste          |
+| **Placa perfurada 7cm x 3cm**| Alternativa a placa CI         | Suporte aos módulos no 1° teste          |
 
 ---
 
@@ -78,7 +80,8 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 
 ## 🖼️ Imagens do Protótipo
 ### Partes mecânicas
-#### Célula de carga
+#### Pés e bases para células de cargas
+Usados para posiciona adequadamente as células de carga de modo ao peso do gato deformá-las adequadamente.
 
 ![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga01.png)
 ![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga02.png)
@@ -86,7 +89,15 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 ![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga03.png)
 ![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga04.png)
 
+
+#### Organizador de fios 
+Usado para esticar e esconder as emendas de fios da celula de cargas com o cabo que vai para a caixa de circuitos
+
+![Acessorios_Celula_de_Carga](images/organizadorFios.png)
+
+
 #### Caixa de circuitos
+Caixa para os circuitos, posiciona adequadamente a placa, a bateria, o LED e o botão.
 ![Acessorios_Celula_de_Carga](images/caixa01.png)
 ![Acessorios_Celula_de_Carga](images/caixa02.png)
 
@@ -96,7 +107,7 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 ![Acessorios_Celula_de_Carga](images/caixa05.png)
 
 
-### Partes eletrônica
+### Partes eletrônicas
 #### Teste em protoboard.
 ![Protoboard](images/protoboard.png)
 
@@ -149,7 +160,7 @@ De acordo com dados do Instituto Pet Brasil, em matéria de LUCCA (2025) publica
 
 ## 🚀 Como Começar
 
-1. **Monte o prototipo seguindo as imagens acima**
+1. **Monte o protótipo seguindo as imagens acima**
 
 2. **Clonar o repositório**
    ```bash
@@ -187,22 +198,22 @@ A própria biblioteca do **RobTillaart** para HX711 fornece um exemplo para cali
 - Abra o exemplo,  
 - ajuste as linhas **13 e 14** como mostrado abaixo 
 ```cpp
-  - uint8_t dataPin = 3;  
-  - uint8_t clockPin = 4;
+  uint8_t dataPin = 3;  
+  uint8_t clockPin = 4;
 ```
-- Grave a sketch no esp32. 
-- Com o auxilio de um **peso conhecido**, sigas as intruções mostradas no Monito Serial da IDE arduino.  
+- Grave a sketch no ESP32. 
+- Com o auxilío de um **peso conhecido**, siga as instruções mostradas no Monitor Serial da IDE Arduino.  
   - Se o monitor serial não estiver aparecendo, use **Ctrl + Shift + M** para abrir o monitor.
-  - Se estiver usando um ESP com conexão direta com a USB, como o **ESP32-c3 Super Mini** coloque um **delay** apos iniciar a porta serial
+  - Se estiver usando um ESP com conexão direta com a USB, como o **ESP32-C3 Super Mini** coloque um **delay** após iniciar a porta serial
 
 ```cpp
 void setup()
 {
   Serial.begin(115200);
-  delay(1000);  //  espera Serial Monito se conectar na USB Serial 
+  delay(1000);  //  espera o Monitor Serial se conectar na USB Serial 
 ```
 
-- Ao final, será mostrado os **valores de calibração** similar a :
+- Ao final, serão mostrados os **valores de calibração** similar a :
 
 ```cpp
 WEIGHT: 3000
@@ -219,7 +230,7 @@ in the setup of your project
 #define scalaPrefIni 135.926117
 #define offsetPrefIni 253466
 ```
-Na primeira vez que usar ou toda vez que mudar algo sobre a base, como uma cama nova, tare a balança usando o app blynk
+Na primeira vez que usar ou toda vez que mudar algo sobre a base, como uma cama nova, tare a balança usando o app Blynk
 
 ---
 
@@ -322,6 +333,18 @@ Esse procedimento garante que alertas de bateria baixa e gráficos históricos r
 ## 🧪 Testes e Métricas Atuais
 
 **Ainda em execução**
+
+---
+
+## 📥 Downloads
+
+
+- [Modelos 3D (`arquivos3D/`)](arquivos3D) – peças da estrutura física da cama para impressão/ajustes mecânicos.
+
+<a href="https://github.com/arnaldomacari/CamaGatoIoT/arquivos3D/baseCaixa.stl" download:>
+  <img src="https://github.com/arnaldomacari/CamaGatoIoT/images/icoCaixa.png>
+</a>
+
 
 ---
 
