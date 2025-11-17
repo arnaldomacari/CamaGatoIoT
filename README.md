@@ -52,6 +52,9 @@ Alterações discretas no peso corporal são, muitas vezes, os primeiros sinais 
 ---
 
 ## 🧰 Escolha de Materiais
+As células de carga, que transformam o peso do gato em sinal elétrico, precisam ser posicionadas corretamente para que o peso gere uma força de cisalhamento adequada. Para isso, foi desenhado no Onshape um pé e um suporte, mostrados abaixo, que depois foram impressos em 3D usando PLA. O pé e o suporte, junto com a própria célula, também têm a função de elevar a base de MDF onde tudo está fixado, criando um espaço por baixo para a passagem da fiação e para acomodar o circuito eletrônico sem que ambos encostem no chão.
+Nos diagramas de Ashby, o MDF aparece na região das madeiras, tem densidade intermediária (600–800 kg/m³) e módulo entre 2–4 GPa. Essa posição o caracteriza como um material rígido, relativamente leve e adequado para estruturas que exigem estabilidade dimensional e baixo custo. No projeto, foi utilizada uma base circular de MDF com raio de 50 cm, espessura de 15 mm e pintada com camadas generosas de tinta epóxi. Essa pintura garante fácil assepsia e alta durabilidade, como mostrado na foto da página anterior.
+A caixa do circuito e o porta-fio central também foram impressos em 3D. A manufatura aditiva foi escolhida para o protótipo pela agilidade de produção, considerando a definição da função mecânica da estrutura (rigidez + estabilidade + baixo peso). Na análise de restrições (tamanho, peso do gato e deformação mínima da base), a seleção do polímero PLA levou em conta a facilidade de impressão, baixa deformação, custo, estética e, para garantir maior rigidez, foi utilizado 60% de preenchimento. Inicialmente, usando um paquímetro, foram desenhados no Onshape, com precisão, a célula de carga, a placa do circuito eletrônico (já previamente construída) e a bateria. Com esses elementos modelados, foi possível construir ao redor deles o pé, o suporte, a base do circuito e a caixa.
 
 
 
@@ -88,6 +91,9 @@ Usados para posicionar corretamente as células de carga, garantindo que o peso 
 
 ![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga03.png)
 ![Acessorios_Celula_de_Carga](images/acessorios_celula_de_carga04.png)
+![Acessorios_Celula_de_Carga](images/medidas_pe.png)
+![Acessorios_Celula_de_Carga](images/medidas_suporte.png)
+
 
 
 #### Organizador de fios 
@@ -97,18 +103,20 @@ Usado para esticar e esconder as emendas de fios das células de carga com o cab
 ![Organizador2](images/organizadorFios02.png)
 ![Organizador3](images/organizadorFios03.png)
 ![Organizador4](images/organizadorFios04.png)
-
+![Organizador4](images/medidas_portafio.png)
 
 
 #### Caixa de circuitos
 Caixa que abriga os circuitos, posicionando adequadamente a placa, a bateria, o LED e o botão.
 ![Acessorios_Celula_de_Carga](images/caixa01.png)
 ![Acessorios_Celula_de_Carga](images/caixa02.png)
+![Acessorios_Celula_de_Carga](images/medidas_base.png)
 
 ![Acessorios_Celula_de_Carga](images/caixa03.png)
 ![Acessorios_Celula_de_Carga](images/caixa04.png)
-
 ![Acessorios_Celula_de_Carga](images/caixa05.png)
+![Acessorios_Celula_de_Carga](images/medidas_caixa.png)
+
 
 
 ### Partes eletrônicas
@@ -258,7 +266,7 @@ Na primeira vez que usar ou sempre que alterar a base (por exemplo, com uma cama
      - `V9` gráfico ou histórico (Últimos envios em kg).
    - Copie `Template ID`, `Template Name` e `Auth Token` para `senhas.h`.
 
-![Protoboard](images/appBlynk.jpeg)
+![Protoboard](images/appBlynk.png)
 
 7. **Publicar o Google Apps Script**
    - Crie uma planilha e um Apps Script para receber POST com JSON (`peso`, `temperatura`, `bateria`). 
